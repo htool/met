@@ -148,7 +148,7 @@ function setSchedule () {
   });
 }
 
-app.use(express.static('./public'));
+app.use(express.static(chartsFolder));
 
 app.route('/refresh').get(function(req,res) {
     refresh();
