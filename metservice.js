@@ -9,10 +9,9 @@ var http = require('https');
 var app = express();
 var request = require('request');
 var cheerio = require('cheerio');
-var dir = path.join(__dirname, 'public');
 var charts = {};
-const chartsFolder = './public';
-const chartsJson = chartsFolder + '/' + 'charts.json'
+const chartsFolder = path.join(__dirname, 'public');
+const chartsJson = path.join(chartsFolder, 'charts.json');
 const fs = require('fs');
 
 
