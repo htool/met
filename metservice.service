@@ -6,8 +6,8 @@ After=network.target
 [Service]
 Type=simple
 User=pi
-Group=PI
-ExecStart=cd /home/pi/src/met/; node metservice.js
+Group=pi
+ExecStart=/usr/bin/node metservice.js
 TimeoutStartSec=0
 RemainAfterExit=yes
 
