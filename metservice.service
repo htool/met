@@ -1,0 +1,15 @@
+[Unit]
+Description=MET Service pressure charts
+DefaultDependencies=no
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+Group=PI
+ExecStart=cd /home/pi/src/met/; node metservice.js
+TimeoutStartSec=0
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target
