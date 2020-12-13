@@ -149,6 +149,7 @@ function setSchedule () {
 }
 
 app.use(express.static('./public'));
+
 app.route('/refresh').get(function(req,res) {
     refresh();
     res.redirect('/');
