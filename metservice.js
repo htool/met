@@ -23,8 +23,10 @@ function saveInfo () {
 }
 
 function loadInfo () {
-  charts = JSON.parse(fs.readFileSync(chartsJson, 'utf8'));
-  // console.log('Loaded charts: ' + JSON.stringify(charts));
+  if (fs.existsSync(chartsJson)) {
+    charts = JSON.parse(fs.readFileSync(chartsJson, 'utf8'));
+    // console.log('Loaded charts: ' + JSON.stringify(charts));
+  }
   removeOld();
 }
 
