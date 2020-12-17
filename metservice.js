@@ -24,7 +24,7 @@ function saveInfo () {
 
 function loadInfo () {
   charts = JSON.parse(fs.readFileSync(chartsJson, 'utf8'));
-  console.log('Loaded charts: ' + JSON.stringify(charts));
+  // console.log('Loaded charts: ' + JSON.stringify(charts));
   removeOld();
 }
 
@@ -61,13 +61,13 @@ function removeOld () {
   let now = Date.now();
   console.log('Removing old');
   for (const [key, value] of Object.entries(charts)) {
-    console.log('Now: ' + now + ' key: ' + key);
+    // console.log('Now: ' + now + ' key: ' + key);
     if (now - key > (3600 * 1000 * 24 * 4)) { // 4 days
       console.log('Deleting old ' + value['filename']);
       fs.unlink(chartsFolder + '/' + value['filename'], (err => {
         if (err) console.log(err);
       }));
-      console.log('Deleting charts[key] ' + charts[key])
+      console.log('Deleting charts[key] ' + JSON.stringify(charts[key]));
       delete charts[key];
     }
   }
