@@ -172,7 +172,7 @@ app.route('/').get(function(req,res) {
     if (Tdiff > 0) {
       Tdiff = '+' + Tdiff;
     }
-    response = response + "<b>T" + Tdiff + " " + value['timestring'] + "</b></br><img style=\"width:100%;\" src=\"" + value['filename'] + "\">" + "</br>";
+    response = response + "<b>T" + Tdiff + " " + value['timestring'] + "</b></br><img src=\"" + value['filename'] + "\">" + "</br>";
   };
 
   response = response + "</body>";
