@@ -64,7 +64,7 @@ function removeOld () {
   console.log('Removing old');
   for (const [key, value] of Object.entries(charts)) {
     // console.log('Now: ' + now + ' key: ' + key);
-    if (now - key > (3600 * 1000 * 24 * 4)) { // 4 days
+    if (now - key > (3600 * 1000 * 36)) { // 4 days
       console.log('Deleting old ' + value['filename']);
       fs.unlink(chartsFolder + '/' + value['filename'], (err => {
         if (err) console.log(err);
