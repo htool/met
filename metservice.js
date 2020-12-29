@@ -141,6 +141,7 @@ function refresh () {
   }
     //console.log(JSON.stringify(charts));
   });
+  removeOld();
 }
 
 
