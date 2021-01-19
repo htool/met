@@ -158,8 +158,9 @@ app.use(express.static(chartsFolder));
 
 app.route('/refresh').get(function(req,res) {
     refresh();
-    res.redirect('/');
+    res.redirect('back');
 });
+
 
 app.route('/').get(function(req,res) {
   var response = '<html><title>MET Office surface pressure charts</title><body>\
@@ -181,6 +182,37 @@ app.route('/').get(function(req,res) {
   };
 
   response = response + "</body>";
+  res.send(response);
+});
+
+app.route('/slideshow').get(function(req,res) {
+  var response = '<html><title>MET Office surface pressure charts</title> \
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> \
+  <style>.mySlides {display:none;}</style><body>';
+  response = response + "<div class=\"w3-center\">";
+  response = response + "<div class=\"w3-content w3-display-container\">";
+
+  let T0 = Math.round(Date.now() / 3600000);
+
+  for (const [key, value] of Object.entries(charts).sort()) {
+    // console.log(key + ": " + JSON.stringify(value));
+    let T = Math.round(key/3600000);
+    let Tdiff = T - T0;
+    if (Tdiff > 0) {
+      Tdiff = '+' + Tdiff;
+    }
+    response = response + "<div class=\"w3-display-container myMaps\">\n<img src=\"" + value['filename'] + "\">\n";
+    response = response + "<div class=\"w3-display-topmiddle w3-container w3-padding-16 w3-black\">T " + Tdiff + "</div></div>";
+    //Tdiff + value['timestring']
+  //  <button class=\"w3-button demo\" onclick=\"currentDiv(1)\">" + Tdiff + "</button>
+  //  </div>";
+
+  };
+  response = response + "<button class=\"w3-button\" onclick=\"plusDivs(-1)\">&#10094; Prev</button> \
+                         <button class=\"w3-button\" onclick=\"plusDivs(1)\">Next &#10095;</button>";
+
+  response = response + "<script src=\"slideshow.js\"></script><form method=\"get\" action=\"/refresh\"> \
+        <button type=\"submit\">Refresh</button></form></body>";
   res.send(response);
 });
 
