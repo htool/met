@@ -14,6 +14,9 @@ const chartsFolder = path.join(__dirname, 'public');
 const chartsJson = path.join(chartsFolder, 'charts.json');
 const fs = require('fs');
 
+function debug (msg) {
+  console.log(msg);
+}
 
 function saveInfo () {
   console.log('Saving ' + Object.keys(charts).length)
@@ -25,7 +28,7 @@ function saveInfo () {
 function loadInfo () {
   if (fs.existsSync(chartsJson)) {
     charts = JSON.parse(fs.readFileSync(chartsJson, 'utf8'));
-    // console.log('Loaded charts: ' + JSON.stringify(charts));
+    debug('Loaded charts: ' + JSON.stringify(charts));
   }
   removeOld();
 }
@@ -59,23 +62,24 @@ const download = (url, dest, cb) => {
     });
 };
 
-function removeOld () {
+async function removeOld () {
   let now = Date.now();
   console.log('Removing old');
   for (const [key, value] of Object.entries(charts)) {
     // console.log('Now: ' + now + ' key: ' + key);
     if (now - key > (3600 * 1000 * 36)) { // 36 hours
-      console.log('Deleting old ' + value['filename']);
+      debug('Deleting old ' + value['filename']);
       fs.unlink(chartsFolder + '/' + value['filename'], (err => {
         if (err) console.log(err);
       }));
-      console.log('Deleting charts[key] ' + JSON.stringify(charts[key]));
+      debug('Deleting charts[key] ' + JSON.stringify(charts[key]));
       delete charts[key];
     }
   }
 }
 
-function refresh () {
+async function refresh () {
+  removeOld();
   request('https://www.metoffice.gov.uk/weather/maps-and-charts/surface-pressure', function (error, response, html) {
     console.log('Refreshing.');
     if (!error && response.statusCode == 200) {
@@ -95,34 +99,34 @@ function refresh () {
           if (charts[timestamp] != undefined) {
             //console.log('defined')
             if (charts[timestamp]['timestring'] != timestring) {
-               //console.log('Updating timestring for ' + filename + 'from' + charts[timestamp]['timestring'] + ' to ' + timestring);
+               debug('Updating timestring for ' + filename + 'from' + charts[timestamp]['timestring'] + ' to ' + timestring);
             } else {
-              //console.log('Setting timestring for ' + filename + ' to ' + timestring);
+              debug('Setting timestring for ' + filename + ' to ' + timestring);
             }
 
             // Check if previous file exists
             let current_filename = charts[timestamp]['filename'];
-            //console.log('filename ' + filename + ' vs ' + current_filename);
+            debug('Checking filename ' + filename + ' vs ' + current_filename);
             if (filename != current_filename) {
               if (fs.existsSync(chartsFolder + '/' + current_filename)) {
                 fs.unlink(chartsFolder + '/' + current_filename, (err => {
                   if (err) console.log(err);
                 }));
-                //console.log('Deleted previous chart ' + current_filename);
+                debug('Deleted previous chart ' + current_filename);
               }
             } else {
-              //console.log('filename ' + filename + ' did not change')
+              debug('filename ' + filename + ' did not change')
             }
 
           } else {
             //console.log('undefined')
           }
           if (fs.existsSync(chartsFolder + '/' + filename)) {
-            // console.log(filename + ' exists already');
+            debug(filename + ' exists already');
           } else {
-            // console.log(filename + ' does not exist yet')
+            debug(filename + ' does not exist yet')
             // Download the file
-            // console.log('Downloading ' + filename);
+            debug('Downloading ' + filename);
             download(imgsrc, chartsFolder + '/' + filename);
           }
           // Store new data
@@ -141,7 +145,6 @@ function refresh () {
   }
     //console.log(JSON.stringify(charts));
   });
-  removeOld();
 }
 
 
@@ -166,7 +169,7 @@ app.route('/').get(function(req,res) {
 
   let T0 = Math.round(Date.now() / 3600000);
 
-  for (const [key, value] of Object.entries(charts)) {
+  for (const [key, value] of Object.entries(charts).sort()) {
     // console.log(key + ": " + JSON.stringify(value));
     let T = Math.round(key/3600000);
     let Tdiff = T - T0;
@@ -174,6 +177,7 @@ app.route('/').get(function(req,res) {
       Tdiff = '+' + Tdiff;
     }
     response = response + "<b>T" + Tdiff + " " + value['timestring'] + "</b></br><img src=\"" + value['filename'] + "\">" + "</br>";
+    debug("Reponse: " + key + " " + Tdiff + " " + value['timestring'] + " " + value['filename'])
   };
 
   response = response + "</body>";
