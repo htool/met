@@ -187,8 +187,9 @@ app.route('/').get(function(req,res) {
 
 app.route('/slideshow').get(function(req,res) {
   var response = '<html><title>MET Office surface pressure charts</title> \
-  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> \
-  <style>.mySlides {display:none;}</style><body>';
+  <meta name="viewport" content="width=device-width, initial-scale=1"> \
+  <link rel="stylesheet" href="slideshow.css"> \
+  <style>.myMaps {display:none;}</style><body>';
   response = response + "<div class=\"w3-center\">";
   response = response + "<div class=\"w3-content w3-display-container\">";
 
@@ -201,18 +202,19 @@ app.route('/slideshow').get(function(req,res) {
     if (Tdiff > 0) {
       Tdiff = '+' + Tdiff;
     }
-    response = response + "<div class=\"w3-display-container myMaps\">\n<img src=\"" + value['filename'] + "\">\n";
-    response = response + "<div class=\"w3-display-topmiddle w3-container w3-padding-16 w3-black\">T " + Tdiff + "</div></div>";
+    response = response + '<div class="w3-display-container myMaps">\n<img src="' + value['filename'] + '" style="width:100%">\n';
+    response = response + '<div class="w3-display-topmiddle w3-container w3-padding-16 w3-black">T ' + Tdiff + '</div></div>';
     //Tdiff + value['timestring']
   //  <button class=\"w3-button demo\" onclick=\"currentDiv(1)\">" + Tdiff + "</button>
   //  </div>";
 
   };
-  response = response + "<button class=\"w3-button\" onclick=\"plusDivs(-1)\">&#10094; Prev</button> \
-                         <button class=\"w3-button\" onclick=\"plusDivs(1)\">Next &#10095;</button>";
+  response = response + '<button class="w3-display-left w3-button" onclick="plusDivs(-1)">&#10094;</button> \
+                         <button class="w3-display-right w3-button" onclick="plusDivs(1)">&#10095;</button>';
 
-  response = response + "<script src=\"slideshow.js\"></script><form method=\"get\" action=\"/refresh\"> \
-        <button type=\"submit\">Refresh</button></form></body>";
+  response = response + '<script src="slideshow.js"></script> \
+    <div class="w3-display-bottommiddle "><form method="get" action="/refresh"> \
+    <button type="submit">Refresh</button></form></div></body>';
   res.send(response);
 });
 
