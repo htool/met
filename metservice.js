@@ -33,10 +33,12 @@ function loadInfo () {
   removeOld();
 }
 
-const download = (url, dest, cb) => {
+
+async function download (url, dest, cb) {
     const file = fs.createWriteStream(dest);
     const sendReq = request.get(url);
 
+    debug('Start downloading ' + url);
     // verify response code
     sendReq.on('response', (response) => {
         // console.log('Download response: ' + JSON.stringify(response));
@@ -57,6 +59,7 @@ const download = (url, dest, cb) => {
     });
 
     file.on('error', (err) => { // Handle errors
+        debug('Error downloading ' + url);
         fs.unlink(dest); // Delete the file async. (But we don't check the result)
         return cb(err.message);
     });
