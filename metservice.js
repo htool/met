@@ -166,7 +166,11 @@ app.route('/refresh').get(function(req,res) {
 
 
 app.route('/').get(function(req,res) {
-  var response = '<html><title>MET Office surface pressure charts</title><body>\
+  var response = '<html>\
+    <head>\
+      <link rel="stylesheet" href="http://mfdstore.navico.com/Content/navigation.css">\
+      <title>MET Office surface pressure charts</title><body>\
+    </head>\
     <form method="get" action="/refresh"> \
       <button type="submit">Refresh</button> \
     </form>';
@@ -212,8 +216,8 @@ app.route('/slideshow').get(function(req,res) {
   //  </div>";
 
   };
-  response = response + '<button class="w3-display-left w3-button" onclick="plusDivs(-1)">&#10094;</button> \
-                         <button class="w3-display-right w3-button" onclick="plusDivs(1)">&#10095;</button>';
+  response = response + '<button class="w3-display-left w3-button" onclick="plusDivs(-1)"><b>&lt;</b></button> \
+                         <button class="w3-display-right w3-button" onclick="plusDivs(1)"><b>&gt;</b></button>';
 
   response = response + '<script src="slideshow.js"></script> \
     <div class="w3-display-bottommiddle "><form method="get" action="/refresh"> \
